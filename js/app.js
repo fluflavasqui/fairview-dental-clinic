@@ -77,9 +77,23 @@ const hoursList = () => {
   return `
   <ul class="hours">
     ${hours.map((h) => `
-      <li class="${h.day === day ? 'is-today' : ''}"><span>${h.label}${h.day === day ? ' <em>Today</em>' : ''}</span><span>${h.text}</span></li>`).join('')}
+      <li data-day="${h.day}" class="${h.day === day ? 'is-today' : ''}"><span>${h.label} <em${h.day === day ? '' : ' hidden'}>Today</em></span><span>${h.text}</span></li>`).join('')}
   </ul>`;
 };
+
+function refreshOpeningStatus() {
+  const status = openStatus();
+  $$('[data-live-status]').forEach((el) => {
+    el.classList.toggle('is-open', status.open);
+    $('[data-status-text]', el).textContent = status.text;
+  });
+  const { day } = dublinNow();
+  $$('.hours li[data-day]').forEach((el) => {
+    const isToday = Number(el.dataset.day) === day;
+    el.classList.toggle('is-today', isToday);
+    $('em', el).hidden = !isToday;
+  });
+}
 
 /* ---------- shared blocks ---------- */
 function visitBlock() {
@@ -131,7 +145,7 @@ function renderHome() {
   <section class="hero">
     <div class="container hero__grid">
       <div class="hero__copy">
-        <p class="eyebrow">Your family dentist · Dublin 3</p>
+        <p class="eyebrow">${icon('tooth')}Your family dentist · Dublin 3</p>
         <h1 class="display">Friendly dentistry.<br><span>Right here in Fairview.</span></h1>
         <p class="lead">Dr Aoife Lynch and Dr Aidan Ahern welcome new and existing patients to their newly refurbished clinic, from routine check-ups to emergencies, Invisalign and whitening.</p>
         <div class="btn-row">${callBtn()}${bookLink('btn--ghost')}</div>
@@ -144,7 +158,7 @@ function renderHome() {
           <figcaption><span>Newly refurbished. Same friendly welcome.</span><a href="#/team">Meet your dentists ${icon('arrowRight')}</a></figcaption>
         </figure>
         <div class="hero-hours">
-          <p class="status ${status.open ? 'is-open' : ''}"><span class="dot"></span>${status.text}</p>
+          <p class="status ${status.open ? 'is-open' : ''}" data-live-status><span class="dot"></span><span data-status-text>${status.text}</span></p>
           <h2 class="h3">Early starts, later finishes.</h2>
           <div class="hero-hours__summary"><span>Tuesday &amp; Wednesday<strong>8am – 7pm</strong></span><span>Mon, Thu &amp; Fri<strong>until 5.30pm</strong></span></div>
           <details class="hero-hours__details"><summary>See all opening hours ${icon('chevronRight')}</summary>${hoursList()}</details>
@@ -405,7 +419,7 @@ function renderContact() {
         </form>
       </div>
       <aside class="hours-card" data-reveal aria-label="Opening hours">
-        <p class="status ${status.open ? 'is-open' : ''}"><span class="dot"></span>${status.text}</p>
+        <p class="status ${status.open ? 'is-open' : ''}" data-live-status><span class="dot"></span><span data-status-text>${status.text}</span></p>
         <h2 class="h3">Opening hours</h2>
         ${hoursList()}
       </aside>
@@ -442,7 +456,7 @@ function renderHeader(path) {
   const status = openStatus();
   $('#topbar').innerHTML = `
     <div class="container topbar__inner">
-      <span class="status ${status.open ? 'is-open' : ''}"><span class="dot"></span>${status.text}</span>
+      <span class="status ${status.open ? 'is-open' : ''}" data-live-status><span class="dot"></span><span data-status-text>${status.text}</span></span>
       <span><span class="hide-sm">${clinic.addressLines[0]}, Dublin 3 · </span><a href="${clinic.phoneHref}">${clinic.phone}</a></span>
     </div>`;
   $('#site-header').innerHTML = `
@@ -666,3 +680,6 @@ window.addEventListener('resize', () => {
   if (window.innerWidth > 900 && document.body.classList.contains('menu-open')) toggleMenu(false);
 });
 route();
+setInterval(refreshOpeningStatus, 30000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshOpeningStatus(); });
+window.addEventListener('focus', refreshOpeningStatus);

@@ -17,6 +17,8 @@ A redesign proposal for [fairviewdentalclinic.ie](https://www.fairviewdentalclin
 - **Real photos and logo** — the clinic's own FDC logo, team photos and rooms, instead of stock images.
 - **Cleaner copy** — typos fixed ("RCSI", "networks") and photos described in words instead of file names such as "IMG_6345.jpeg".
 - **Accessible** — semantic HTML, skip link, keyboard-friendly menu (focus trap, Esc to close), visible focus, reduced-motion support, meaningful image descriptions.
+- **Current open/closed status** — refreshes every 30 seconds and on tab return without resetting the appointment form. Opening hours remain as published by the clinic.
+- **Small-screen polish** — the top-bar phone stays on one line, while the status can wrap; the hero includes a dental icon alongside its family-dentist label.
 
 ## Stack
 

@@ -121,6 +121,8 @@ main:focus { outline: none; }
 .hero__grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 64px; align-items: center; }
 .hero .display { font-size: clamp(2.3rem, 4.1vw, 3.5rem); line-height: 1.1; }
 .hero .display span { color: var(--brand-deep); }
+.hero__copy > .eyebrow { display: flex; align-items: center; gap: 8px; }
+.hero__copy > .eyebrow .icon { width: 22px; height: 22px; }
 .hero .lead { max-width: 32em; font-size: 1.08rem; }
 .hero .btn-row { margin-bottom: 24px; }
 .hero__availability { display: flex; align-items: center; gap: 8px; font-size: .88rem; color: var(--ink-soft); margin: 0 0 22px; }
@@ -435,7 +437,14 @@ main:focus { outline: none; }
 @media (max-width: 1000px) { .savings--3 { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .staff { grid-template-columns: 1fr; } .credentials { padding: 6px 20px; } }
 .nowrap { white-space: nowrap; }
-@media (max-width: 600px) { .topbar { font-size: .8rem; } .topbar .status { white-space: nowrap; } }
+@media (max-width: 600px) {
+  .topbar { font-size: .8rem; }
+  .topbar__inner { align-items: center; gap: 12px; padding-top: 6px; padding-bottom: 6px; }
+  .topbar .status { min-width: 0; gap: 6px; }
+  .topbar .status .dot { flex: none; }
+  .topbar .status [data-status-text] { white-space: normal; }
+  .topbar__inner > span:last-child { flex: none; white-space: nowrap; }
+}
 .logo__mark { border-radius: 50%; background: #fff; object-fit: contain; }
 .logo--light .logo__mark { padding: 2px; }
 
